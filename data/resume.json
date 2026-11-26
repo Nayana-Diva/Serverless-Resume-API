@@ -1,0 +1,72 @@
+
+{
+  "personal": {
+    "name": "Nayana Gowda",
+    "title": "Computer Science Student | Python Developer | Frontend Developer",
+    "location": "Virar, Maharashtra, India",
+    "linkedin": "https://linkedin.com/in/nayana-gowda-610b6235b",
+    "github": "https://github.com/Nayana-Diva",
+    "summary": "Computer Science undergraduate with experience building Python applications, frontend projects, API integrations, and cloud-based security simulations. Interested in software development and cloud technologies."
+  },
+  "experience": [],
+  "education": [
+    {
+      "degree": "Bachelor of Science in Computer Science",
+      "institution": "Bhaskar Waman Thakur College of Science, Mumbai University",
+      "start_year": 2024,
+      "end_year": 2027,
+      "status": "Pursuing",
+      "cgpa": 9.13
+    },
+    {
+      "degree": "Higher Secondary Certificate",
+      "percentage": 67.67
+    },
+    {
+      "degree": "Secondary School Certificate",
+      "percentage": 80
+    }
+  ],
+  "skills": {
+    "programming_languages": [
+      "Python",
+      "C++",
+      "JavaScript"
+    ],
+    "web_development": [
+      "HTML",
+      "CSS",
+      "React"
+    ],
+    "tools_and_technologies": [
+      "Git",
+      "GitHub",
+      "Vercel",
+      "Flask",
+      "REST API Integration"
+    ],
+    "cloud_and_security": [
+      "AWS",
+      "CloudFormation",
+      "Serverless Architecture",
+      "Email Authentication"
+    ]
+  },
+  "projects": [
+    {
+      "name": "HMM Anomaly Detector",
+      "description": "Built a Gaussian Hidden Markov Model-based anomaly detection project using simulated sensor data.",
+      "technologies": ["Python", "Machine Learning", "HMM"]
+    },
+    {
+      "name": "Secure Email Authentication Gateway",
+      "description": "Developed a Flask-based email authentication demonstration using SPF, DKIM and DMARC.",
+      "technologies": ["Python", "Flask", "SPF", "DKIM", "DMARC"]
+    },
+    {
+      "name": "FocusFlow",
+      "description": "Contributed to frontend development, API integration and Vercel deployment.",
+      "technologies": ["HTML", "CSS", "JavaScript", "API Integration", "Vercel"]
+    }
+  ]
+}

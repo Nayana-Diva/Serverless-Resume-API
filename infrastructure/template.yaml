@@ -1,0 +1,135 @@
+﻿
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Serverless Resume API using Lambda, API Gateway and DynamoDB
+
+Resources:
+
+  # DynamoDB Resume Table
+  ResumeTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ServerlessResumeData
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+
+  # API Gateway
+  ResumeApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: ServerlessResumeAPI
+      StageName: Prod
+      Auth:
+        ApiKeyRequired: true
+
+  # Lambda Function
+  ResumeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ServerlessResumeFunction
+      Runtime: python3.13
+      Handler: lambda_function.lambda_handler
+      CodeUri: ../src/
+      Timeout: 15
+      MemorySize: 128
+
+      Environment:
+        Variables:
+          RESUME_TABLE: !Ref ResumeTable
+
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ResumeTable
+
+      Events:
+        PersonalEndpoint:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ResumeApi
+            Path: /personal
+            Method: GET
+
+        ExperienceEndpoint:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ResumeApi
+            Path: /experience
+            Method: GET
+
+        EducationEndpoint:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ResumeApi
+            Path: /education
+            Method: GET
+
+        SkillsEndpoint:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ResumeApi
+            Path: /skills
+            Method: GET
+
+  # API Key
+  ResumeApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: ServerlessResumeAPIKey
+      Enabled: true
+
+  # API Usage Plan
+  ResumeUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn: ResumeApiProdStage
+    Properties:
+      UsagePlanName: ResumeAPIUsagePlan
+      Description: Controls API request rate and quota
+      ApiStages:
+        - ApiId: !Ref ResumeApi
+          Stage: Prod
+      Throttle:
+        BurstLimit: 5
+        RateLimit: 2
+      Quota:
+        Limit: 1000
+        Period: MONTH
+
+  # Connect API Key to Usage Plan
+  ResumeUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ResumeApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref ResumeUsagePlan
+
+Outputs:
+
+  ResumeApiUrl:
+    Description: Base URL of the Resume API
+    Value: !Sub
+      - "https://${ApiId}.execute-api.${AWS::Region}.amazonaws.com/${Stage}/"
+      - ApiId: !Ref ResumeApi
+        Stage: Prod
+
+  ResumeTableName:
+    Description: DynamoDB table name
+    Value: !Ref ResumeTable
+
+  ResumeFunctionName:
+    Description: Lambda function name
+    Value: !Ref ResumeFunction
+
+  ResumeApiKeyId:
+    Description: API Key ID (retrieve actual key value from API Gateway)
+    Value: !Ref ResumeApiKey
+
